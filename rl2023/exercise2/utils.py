@@ -28,7 +28,7 @@ def evaluate(env, agent, max_steps, eval_episodes, render):
 
         while not done and steps < max_steps:
             act = agent.act(obs)
-            n_obs, reward, done, info = env.step(act)
+            n_obs, reward, done, info,_ = env.step(act)
             if (eps_num == eval_episodes - 1) and render:
                 env.render()
                 print(reward)

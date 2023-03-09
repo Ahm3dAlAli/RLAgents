@@ -1,3 +1,8 @@
+import sys
+# caution: path[0] is reserved for script path (or '' in REPL)
+sys.path.insert(1, '/Users/ahmed/Documents/UOE/Courses/Semester 2/Reinfrocment Leanring /Coursework/RLAgents')
+
+
 from abc import ABC, abstractmethod
 import numpy as np
 from typing import List, Tuple, Dict, Optional, Hashable
@@ -83,21 +88,21 @@ class ValueIteration(MDPSolver):
         ### PUT YOUR CODE HERE ###
         while True:
             delta = 0
-            for s in self.mdp.states:
-                v = V[s]
+            for s in self.mdp.states:  
+                v = V[self.mdp.states.index(s)]
+                print(v)
                 values = []
                 for a in self.mdp.actions:
-                    value = 0
+                    value = 0 
                     for s_prime in self.mdp.states:
-                        value += self.mdp.P[s, a, s_prime] * (self.mdp.R[s, a, s_prime] + self.gamma * V[s_prime])
+                        value += self.mdp.P[self.mdp.states.index(s), self.mdp.actions.index(a), self.mdp.states.index(s_prime)] * (self.mdp.R[self.mdp.states.index(s), self.mdp.actions.index(a), self.mdp.states.index(s_prime)] + self.gamma * V[self.mdp.states.index(s_prime)])
                     values.append(value)
-                V[s] = max(values)
-                delta = max(delta, abs(v - V[s]))
+                V[self.mdp.states.index(s)] = max(values)
+                delta = max(delta, abs(v - V[self.mdp.states.index(s)]))
             if delta < theta:
                 break
         return V
-        raise NotImplementedError("Needed for Q1")
-        return V
+
 
     def _calc_policy(self, V: np.ndarray) -> np.ndarray:
         """Calculates the policy
@@ -118,17 +123,20 @@ class ValueIteration(MDPSolver):
         """
         policy = np.zeros([self.state_dim, self.action_dim])
         ### PUT YOUR CODE HERE ###
-        # Compute the Q-value function for each state-action pair
-        Q = self._calc_q(V)
-
-        # Set the policy to be greedy with respect to the Q-values
-        best_actions = np.argmax(Q, axis=1)
-        for state, best_action in enumerate(best_actions):
-            policy[state, best_action] = 1
-
-
+        for s in self.mdp.states:
+            q_values = np.zeros(self.action_dim)
+            for a in self.mdp.actions:
+                q = 0
+                for s_prime in self.mdp.states:
+                    q += self.mdp.P[self.mdp._state_dict[s], self.mdp._action_dict[a], self.mdp._state_dict[s_prime]] * \
+                        (self.mdp.R[self.mdp._state_dict[s], self.mdp._action_dict[a], self.mdp._state_dict[s_prime]] + self.gamma * V[self.mdp._state_dict[s_prime]])
+                q_values[self.mdp._action_dict[a]] = q
+            # set the probability of the greedy action to 1, others to 0
+            max_idx = np.argmax(q_values)
+            policy[self.mdp._state_dict[s], max_idx] = 1
         return policy
-
+        
+    
     def solve(self, theta: float = 1e-6) -> Tuple[np.ndarray, np.ndarray]:
         """Solves the MDP
 
@@ -205,16 +213,28 @@ class PolicyIteration(MDPSolver):
         policy = np.zeros([self.state_dim, self.action_dim])
         V = np.zeros([self.state_dim])
         ### PUT YOUR CODE HERE ###
-        policy_stable = False
-        while not policy_stable:
+        while True:
+        # Evaluate the current policy
             V = self._policy_eval(policy)
-            policy_new = self._calc_policy(V)
-
-            if np.array_equal(policy, policy_new):
-                policy_stable = True
-            else:
-                policy = policy_new
-                
+            
+            # Flag to check if policy has changed
+            policy_stable = True
+            
+            # Update the policy
+            for s in range(self.state_dim):
+                old_action = np.argmax(policy[s])
+                q_values = np.zeros(self.action_dim)
+                for a in range(self.action_dim):
+                    q_values[a] = sum(self.mdp.P[s, a, sp] * (self.mdp.R[s, a, sp] + self.gamma * V[sp]) for sp in range(self.state_dim))
+                new_action = np.argmax(q_values)
+                if old_action != new_action:
+                    policy_stable = False
+                policy[s] = np.eye(self.action_dim)[new_action]
+            
+            # Check if the policy has converged
+            if policy_stable:
+                break
+        
         return policy, V
 
     def solve(self, theta: float = 1e-6) -> Tuple[np.ndarray, np.ndarray]:

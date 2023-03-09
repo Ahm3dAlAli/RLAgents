@@ -1,3 +1,9 @@
+import sys
+# caution: path[0] is reserved for script path (or '' in REPL)
+sys.path.insert(1, '/Users/ahmed/Documents/UOE/Courses/Semester 2/Reinfrocment Leanring /Coursework/RLAgents')
+
+
+
 import gym
 from tqdm import tqdm
 
@@ -8,7 +14,7 @@ from rl2023.exercise2.utils import evaluate
 CONFIG = {
     "eval_freq": 1000, # keep this unchanged
     "alpha": 0.05,
-    "epsilon": 0.9,
+    "epsilon": 0.6,
     "gamma": 0.99,
 }
 CONFIG.update(CONSTANTS)
@@ -75,7 +81,8 @@ def train(env, config, output=True):
         while t < config["eps_max_steps"]:
             agent.schedule_hyperparameters(step_counter, max_steps)
             act = agent.act(obs)
-            n_obs, reward, done, _ = env.step(act)
+
+            n_obs, reward, done, _,_ = env.step(act)
             agent.learn(obs, act, reward, n_obs, done)
 
             t += 1

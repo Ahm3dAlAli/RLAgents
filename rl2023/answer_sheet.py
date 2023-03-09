@@ -17,7 +17,7 @@ def question2_1() -> str:
     b) 0.8
     return: (str): your answer as a string. accepted strings: "a" or "b"
     """
-    answer = ""  # TYPE YOUR ANSWER HERE "a" or "b"
+    answer = "a"  # TYPE YOUR ANSWER HERE "a" or "b"
     return answer
 
 
@@ -29,7 +29,7 @@ def question2_2() -> str:
     b) 0.8
     return: (str): your answer as a string. accepted strings: "a" or "b"
     """
-    answer = ""  # TYPE YOUR ANSWER HERE "a" or "b"
+    answer = "a"  # TYPE YOUR ANSWER HERE "a" or "b"
     return answer
 
 
@@ -42,7 +42,7 @@ def question2_3() -> str:
     b) First-Visit Monte Carlo
     return: (str): your answer as a string. accepted strings: "a" or "b"
     """
-    answer = ""  # TYPE YOUR ANSWER HERE "a" or "b"
+    answer = "a"  # TYPE YOUR ANSWER HERE "a" or "b"
     return answer
 
 
@@ -53,7 +53,7 @@ def question2_4() -> str:
     by [Q-learning / First-Visit Monte Carlo] when compared to the other algorithm.
     return: answer (str): your answer as a string (100 words max)
     """
-    answer = ""  # TYPE YOUR ANSWER HERE (100 words max)
+    answer = "The value of the discount factor (gamma) determines the importance of future rewards in reinforcement learning. A high value of gamma means that future rewards are heavily weighted, while a low value means that only immediate rewards are considered. In Q-learning, the agent uses the maximum expected future reward to update its Q-values, so a high gamma will lead to more accurate estimates of the long-term value of taking a particular action in a given state. On the other hand, in First-Visit Monte Carlo, the agent updates its Q-values based on the actual reward received, so a high gamma will not have much of an effect on the learning process. Therefore, the value of gamma affects more the evaluation returns achieved by Q-learning when compared to First-Visit Monte Carlo."  # TYPE YOUR ANSWER HERE (100 words max)
     return answer
 
 

@@ -1,3 +1,9 @@
+
+import sys
+# caution: path[0] is reserved for script path (or '' in REPL)
+sys.path.insert(1, '/Users/ahmed/Documents/UOE/Courses/Semester 2/Reinfrocment Leanring /Coursework/RLAgents')
+
+
 import gym
 
 from rl2023.constants import EX2_MC_CONSTANTS as CONSTANTS
@@ -7,8 +13,8 @@ from tqdm import tqdm
 
 CONFIG = {
     "eval_freq": 5000, # keep this unchanged
-    "epsilon": 0.9,
-    "gamma": 0.99,
+    "epsilon": 0.6,
+    "gamma": 0.8,
 }
 CONFIG.update(CONSTANTS)
 
@@ -73,8 +79,8 @@ def train(env, config):
             agent.schedule_hyperparameters(step_counter, max_steps)
             act = agent.act(obs)
 
-            n_obs, reward, done, _ = env.step(act)
-
+            n_obs, reward, done, _ ,_= env.step(act)
+        
             obs_list.append(obs)
             rew_list.append(reward)
             act_list.append(act)
